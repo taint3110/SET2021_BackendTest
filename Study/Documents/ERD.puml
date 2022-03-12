@@ -1,0 +1,51 @@
+@startuml Application use cases diagram
+skinparam actorStyle awesome
+title ERD
+
+
+entity Customer{
+    -_id: ObjectId <generated>
+    --
+    name: string 
+    address: string 
+    *email: string 
+    *password: string
+    phoneNumber: string 
+    gender: string 
+    cart: string
+    transaction: array
+    billing: array
+}
+
+entity Agency{
+    -_id: ObjectId <generated>
+    --
+    ~readByAdmin: ObjectId
+    ~createByAdmin: ObjectId
+    ~updateByAdmin: ObjectId
+    ~deleteByAdmin: ObjectId
+    ~readByCustomer: array
+    --
+    name: string
+    address: string 
+    *email: string 
+    *password: string
+    phoneNumber: string 
+    gender: string 
+    product: string
+    transaction: array
+    billing: array
+}
+
+
+entity Admin{
+    -_id: ObjectId <generated>
+    --
+}
+Admin "many" *-- "1" Agency: manage Agency
+Customer "many" *-- "1" Agency: buy
+Agency "1" *-- "many" Customer: sell
+
+
+
+@enduml
