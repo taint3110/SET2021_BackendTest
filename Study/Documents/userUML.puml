@@ -1,0 +1,46 @@
+@startuml Application use cases diagram
+skinparam actorStyle awesome
+title UML of users
+
+
+class Customer{
+    --property--
+    name: string 
+    address: string
+    *password: string 
+    *email: string 
+    phoneNumber: string 
+    gender: string 
+    cart: string
+    transaction: Array
+    billing: Array
+}
+
+class Agency{
+    --property--
+    name: string 
+    address: string 
+    email: string 
+    *password: string
+    *phoneNumber: string 
+    gender: string 
+    product: object
+    transaction: Array
+    billing: Array
+}
+
+
+class Admin{
+    --method--
+    readAgency(): void 
+    createAgency(): void 
+    updateAgency(): void
+    deleteAgency(): void
+}
+Admin "many" *-- "1" Agency: manage Agency
+Customer "many" *-- "1" Agency: buy
+Agency "1" *-- "many" Customer: sell
+
+
+
+@enduml
