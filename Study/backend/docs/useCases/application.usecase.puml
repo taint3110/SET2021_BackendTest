@@ -1,0 +1,61 @@
+@startuml Application use cases diagram
+skinparam actorStyle awesome
+title Application use cases diagram
+left to right direction
+:Customer: as customer
+:Agency : as agency
+:Admin : as admin
+
+package "Website"{
+  rectangle "Listing"{
+    usecase "Search products" as search
+  }
+  rectangle "Detail" {
+    usecase "Read transaction" as read_transaction
+    usecase "Read billing" as read_billing
+    usecase "Read agency information" as read_agency_information
+  }
+  usecase "Sort" as sort
+  read_transaction ..> sort: include
+  read_billing ..> sort: include
+}
+
+customer --> search
+customer --> read_transaction
+customer --> read_billing
+customer --> read_agency_information
+
+package "Owner Portal"{
+  rectangle "Product Management" {
+    usecase "Read owner product" as read_owner_product
+    usecase "Create owner product" as create_owner_product
+    usecase "Update owner product" as update_owner_product
+    usecase "Delete owner product" as delete_owner_product
+  }
+  rectangle "Business"{
+    usecase "Read transaction of owner product" as read_transaction_owner
+    usecase "Read billing of owner product" as read_billing_owner
+  }
+}
+
+agency --> read_transaction_owner
+agency --> read_billing_owner
+agency --> read_owner_product
+agency --> create_owner_product
+agency --> update_owner_product
+agency --> delete_owner_product
+
+package "Admin Portal"{
+  rectangle "Supervision" {
+    usecase "Read transaction" as admin_read_transaction
+    usecase "Read billing" as admin_read_billing
+  }
+  usecase "Filter" as filter
+  admin_read_transaction ..> filter: include
+  admin_read_billing ..> filter: include
+}
+
+admin --> admin_read_billing
+admin --> admin_read_transaction
+
+@enduml
