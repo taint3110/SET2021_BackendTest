@@ -10,6 +10,25 @@ export class Admin extends Entity {
   })
   id?: string;
 
+  @property({
+    type: 'array',
+    itemType: 'string',
+    default: ['customer']
+  })
+  roles?: string[];
+
+  @property({
+    type: 'Date',
+    default: new Date()
+  })
+  createdAt?: Date
+
+  @property({
+    type: 'Date',
+    default: new Date()
+  })
+  updatedAt?: Date
+
   constructor(data?: Partial<Admin>) {
     super(data);
   }

@@ -13,7 +13,6 @@ export class MyCustomerService implements UserService<Customer, Credentials>{
     @repository(CustomerRepository)
     public customerRepository: CustomerRepository,
 
-    // @inject('service.hasher')
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public hasher: BcryptHasher
 
@@ -32,12 +31,13 @@ export class MyCustomerService implements UserService<Customer, Credentials>{
     if (!passwordMatched)
       throw new HttpErrors.Unauthorized('password is not valid');
     return foundCustomer;
-  }
+    }
   convertToUserProfile(customer: Customer): UserProfile {
     return {
       [securityId]: customer.id!.toString(),
       id: customer.id,
-      email: customer.email
+      email: customer.email,
+      roles: customer.roles,
     };
     // throw new Error('Method not implemented.');
   }

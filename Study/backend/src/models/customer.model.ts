@@ -1,5 +1,4 @@
 import {Entity, model, property} from '@loopback/repository';
-
 @model({settings: {strict: false}})
 export class Customer extends Entity {
   @property({
@@ -74,6 +73,24 @@ export class Customer extends Entity {
   })
   billing?: object[];
 
+  @property({
+    type: 'array',
+    itemType: 'string',
+    default: ['customer']
+  })
+  roles?: string[];
+
+  @property({
+    type: 'Date',
+    default: new Date()
+  })
+  createdAt?: Date
+
+  @property({
+    type: 'Date',
+    default: new Date()
+  })
+  updatedAt?: Date
 
   constructor(data?: Partial<Customer>) {
     super(data);

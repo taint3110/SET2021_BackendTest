@@ -20,7 +20,7 @@ import {
 import {Agency} from '../models';
 import {AgencyRepository} from '../repositories';
 import {agencyRoutes} from './routes.helper'
-
+import {authorize} from '@loopback/authorization';
 export class AgencyController {
   constructor(
     @repository(AgencyRepository)

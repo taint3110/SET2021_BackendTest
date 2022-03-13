@@ -33,6 +33,7 @@ export const agencyRoutes : {
 
 
 export const adminRoutes : {
+  createAdmin: string,
   readAgency: string,
   createAgency: string,
   updateAgency: string,
@@ -40,6 +41,7 @@ export const adminRoutes : {
   readTransaction: string,
   readBilling: string
 } = {
+  createAdmin: "./createAdmin",
   readAgency: "/admins/readAgency/{id}",
   createAgency: "/admins/createAgency",
   updateAgency: "/admins/updateAgency/{id}",

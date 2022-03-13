@@ -1,4 +1,5 @@
 import {Entity, model, property} from '@loopback/repository';
+import {getJsonSchema} from '@loopback/repository-json-schema';
 
 @model({settings: {strict: false}})
 export class Agency extends Entity {
@@ -54,6 +55,9 @@ export class Agency extends Entity {
 
   @property({
     type: 'object',
+    items: {
+      
+    },
     default: {},
   })
   product?: object;
@@ -72,6 +76,25 @@ export class Agency extends Entity {
     default: [],
   })
   billing?: object[];
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+    default: ['customer'],
+  })
+  roles?: string[];
+
+  @property({
+    type: 'Date',
+    default: new Date()
+  })
+  createdAt?: Date
+
+  @property({
+    type: 'Date',
+    default: new Date()
+  })
+  updatedAt?: Date
 
   constructor(data?: Partial<Agency>) {
     super(data);

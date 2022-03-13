@@ -13,6 +13,8 @@ import { JWTService } from '../services/jwt-service';
 import { MyCustomerService } from '../services/customer-service';
 import { OPERATION_SECURITY_SPEC } from '../utils/security-spec';
 import { customerRoutes } from './routes.helper'
+import {authorize} from '@loopback/authorization';
+import {basicAuthorization} from '../services/basic.authorizor';
 
 export class CustomerController {
   constructor(
@@ -42,8 +44,10 @@ export class CustomerController {
   })
   async signup(@requestBody() customerData: Customer) {
     await validateCredentials(_.pick(customerData, ['email', 'password']), this.customerRepository);
+    customerData.roles = ["customer"]
     customerData.password = await this.hasher.hashPassword(customerData.password)
     const savedCustomer = await this.customerRepository.create(customerData);
+    savedCustomer.password = "******"
     return savedCustomer;
   }
 
@@ -81,6 +85,7 @@ export class CustomerController {
 
 
   @authenticate("jwt")
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   @get(customerRoutes.getMe, {
     security: OPERATION_SECURITY_SPEC,
     responses: {
