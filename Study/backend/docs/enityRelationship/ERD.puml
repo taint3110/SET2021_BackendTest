@@ -4,54 +4,76 @@ title ERD
 
 
 entity Customer{
-    -_id: ObjectId <generated>
-    --
-    name: string 
-    address: string 
-    *email: string 
-    *password: string
-    phoneNumber: string 
-    gender: string 
+    --property--
+    -id: ObjectId <generated>
+    information: information
     cart: string
-    transaction: array
-    billing: array
-    createdAt: Date
-    updatedAt: Date
-    roles: array
+    transaction: transaction
+    billing: billing
 }
 
 entity Agency{
-    -_id: ObjectId <generated>
-    --
-    ~readByAdmin: ObjectId
-    ~createByAdmin: ObjectId
-    ~updateByAdmin: ObjectId
-    ~deleteByAdmin: ObjectId
-    ~readByCustomer: array
-    --
-    name: string
+    --property--
+    -id: ObjectId <generated>
+    information: information
+    product: product
+    transaction: transaction
+    billing: billing
+}
+
+entity Information {
+    name: string 
     address: string 
-    *email: string 
+    email: string 
     *password: string
-    phoneNumber: string 
+    *phoneNumber: string 
     gender: string 
-    product: object
-    transaction: array
-    billing: array
     createdAt: Date
     updatedAt: Date
     roles: array
 }
 
-
-entity Admin{
-    -_id: ObjectId <generated>
-    --
+entity Product{
+    name: string
+    cost: number
+    createdAt: Date
+    updatedAt: Date
 }
 
+entity Transaction{
+    name: string
+    cost: number
+    createdAt: Date
+    updatedAt: Date
+}
+
+entity Billing{
+    name: string
+    cost: number
+    createdAt: Date
+    updatedAt: Date
+}
+
+entity Admin{
+    --method--
+    readAgency(): void 
+    createAgency(): void 
+    updateAgency(): void
+    deleteAgency(): void
+}
+
+Customer ||--o{ Transaction
+Customer ||--o{ Billing
+Customer ||-- Information
+Agency ||--o{ Transaction
+Agency ||--o{ Billing
+Agency ||--o{ Product
+Agency ||-- Information
+
 Admin "belong to" ||--|| Customer
-Customer "has many" ||--o{  Agency
-Agency "has many" ||--o{  Customer
-Admin "has many" ||--o{  Agency
+
+Customer  ||--o{  Agency
+Agency  ||--o{  Customer
+Admin  ||--o{  Agency
 
 @enduml

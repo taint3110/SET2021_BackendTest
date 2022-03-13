@@ -5,7 +5,7 @@ actor Customer
 control server
 database customer
 
-opt CREATE: Custommer sign up
+opt  Custommer log in
   Customer -> server: POST /login with email and password
   activate server
       server -> customer: find customer with email

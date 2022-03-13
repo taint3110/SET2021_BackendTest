@@ -1,0 +1,39 @@
+@startuml read transaction customer sequence
+
+header READ TRANSACTION CUSTOMER SEQUENCE
+actor Customer 
+control server
+database transaction
+database product
+
+opt READ: Custommer read transaction
+  Customer -> server: GET /customers/readTransaction
+  activate server
+  server -> server: check token
+  alt <font color=red>token invalid</font>
+    server --> Customer: 401, unauthorized error
+  else <font color=green>token valid</font>
+    server -> server: check isCustomer
+    alt <font color=red>is not customer</font>
+      server --> Customer: 403, forbidden error
+    else <font color=green>is customer</font>
+      server -> transaction: find transaction
+      alt <font color=red>have error</font>
+        transaction --> server: error
+        server --> Customer: 500, internal error
+      else <font color=green>found transaction</font>
+        transaction --> product: find product
+      else <font color=green>have transaction linked with product data</font>
+          product --> transaction: response product
+          transaction --> server: response transction
+      else <font color=green>success</font>
+          transaction --> server: success
+          server --> Customer: 200, success, response data
+        end
+      end
+    end
+  end
+    deactivate server
+
+
+@enduml
