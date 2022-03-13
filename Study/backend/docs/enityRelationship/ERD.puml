@@ -15,6 +15,9 @@ entity Customer{
     cart: string
     transaction: array
     billing: array
+    createdAt: Date
+    updatedAt: Date
+    roles: array
 }
 
 entity Agency{
@@ -32,9 +35,12 @@ entity Agency{
     *password: string
     phoneNumber: string 
     gender: string 
-    product: string
+    product: object
     transaction: array
     billing: array
+    createdAt: Date
+    updatedAt: Date
+    roles: array
 }
 
 
@@ -42,10 +48,10 @@ entity Admin{
     -_id: ObjectId <generated>
     --
 }
-Admin "many" *-- "1" Agency: manage Agency
-Customer "many" *-- "1" Agency: buy
-Agency "1" *-- "many" Customer: sell
 
-
+Admin "belong to" ||--|| Customer
+Customer "has many" ||--o{  Agency
+Agency "has many" ||--o{  Customer
+Admin "has many" ||--o{  Agency
 
 @enduml

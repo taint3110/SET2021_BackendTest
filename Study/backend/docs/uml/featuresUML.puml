@@ -14,6 +14,9 @@ class Customer{
     cart: string
     transaction: Array
     billing: Array
+    createdAt: Date
+    updatedAt: Date
+    roles: array
 }
 
 class Agency{
@@ -27,6 +30,9 @@ class Agency{
     product: object
     transaction: Array
     billing: Array
+    createdAt: Date
+    updatedAt: Date
+    roles: array
 }
 
 
@@ -37,9 +43,10 @@ class Admin{
     updateAgency(): void
     deleteAgency(): void
 }
-Admin "many" *-- "1" Agency: manage Agency
-Customer "many" *-- "1" Agency: buy
-Agency "1" *-- "many" Customer: sell
+Admin "1" --* "many" Agency: manage Agency
+Customer "many" --* "1" Agency: buy
+Agency "many" --* "1" Customer: sell
+Admin "belong to" ||--|| Customer
 
 
 
