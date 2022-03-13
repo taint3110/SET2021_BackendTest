@@ -93,4 +93,49 @@ export class AdminController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.agencyRepository.deleteById(id);
   }
+
+  @get(adminRoutes.readTransaction)
+  @response(200, {
+    description: 'Admin read transaction of owner product',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Agency, {includeRelations: true}),
+      },
+    },
+  })
+  async readTransaction(
+    @param.path.string('id') id: string,
+    @param.filter(Agency, {exclude: 'where'}) filter?: FilterExcludingWhere<Agency>
+  ){
+    let transaction = {}
+    await this.agencyRepository.findById(id, filter).then(agency => {
+      if(agency.transaction !== undefined){
+        transaction = agency.transaction
+      }
+    })
+    return transaction
+  }
+
+  @get(adminRoutes.readBilling)
+  @response(200, {
+    description: 'Admin read billing of owner product',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Agency, {includeRelations: true}),
+      },
+    },
+  })
+  async readBilling(
+    @param.path.string('id') id: string,
+    @param.filter(Agency, {exclude: 'where'}) filter?: FilterExcludingWhere<Agency>
+  ){
+    let billing = {}
+    await this.agencyRepository.findById(id, filter).then(agency => {
+      if(agency.billing !== undefined){
+        billing = agency.billing
+        console.log(billing)
+      }
+    })
+    return billing
+  }
 }

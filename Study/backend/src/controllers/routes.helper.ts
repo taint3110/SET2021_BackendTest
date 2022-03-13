@@ -1,7 +1,7 @@
 export const customerRoutes : {
   signup: string,
   login: string,
-  getme: string,
+  getMe: string,
   readAgency: string,
   readTransaction: string,
   readBilling: string
@@ -9,10 +9,10 @@ export const customerRoutes : {
 } = {
   signup: "/signup",
   login: "/login",
-  getme: "/customers/me",
+  getMe: "/customers/me",
   readAgency: "/readAgency{id}",
-  readTransaction: "/customers/readTransaction{id}",
-  readBilling: "/customers/readBilling{id}",
+  readTransaction: "/customers/readTransaction/{id}",
+  readBilling: "/customers/readBilling/{id}",
 }
 
 export const agencyRoutes : {
@@ -27,8 +27,8 @@ export const agencyRoutes : {
   createProduct: "/agencies/createProduct{id}",
   updateProduct: "/agencies/updateProduct/{id}",
   deleteProduct: "/agencies/deleteProduct/{id}",
-  readTransaction: "/agencies/readTransaction{id}",
-  readBilling: "/agencies/readBilling{id}",
+  readTransaction: "/agencies/readTransaction/{id}",
+  readBilling: "/agencies/readBilling/{id}",
 }
 
 
@@ -44,7 +44,7 @@ export const adminRoutes : {
   createAgency: "/admins/createAgency",
   updateAgency: "/admins/updateAgency/{id}",
   deleteAgency: "/admins/deleteAgency/{id}",
-  readTransaction: "/admins/readTransaction{id}",
-  readBilling: "/admins/readBilling{id}",
+  readTransaction: "/admins/readTransaction/{id}",
+  readBilling: "/admins/readBilling/{id}",
 }
 

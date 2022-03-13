@@ -1,18 +1,18 @@
-import {authenticate, AuthenticationBindings} from '@loopback/authentication';
-import {inject} from '@loopback/core';
-import {repository} from '@loopback/repository';
-import {get, getJsonSchemaRef, post, requestBody} from '@loopback/rest';
-import {UserProfile} from '@loopback/security';
+import { Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
+import { authenticate, AuthenticationBindings } from '@loopback/authentication';
+import { inject } from '@loopback/core';
+import { get, getJsonSchemaRef, post, param, getModelSchemaRef, requestBody, response } from '@loopback/rest';
+import { UserProfile } from '@loopback/security';
 import * as _ from 'lodash';
-import {PasswordHasherBindings, TokenServiceBindings, CustomerServiceBindings} from '../keys';
-import {Customer} from '../models';
-import {Credentials, CustomerRepository} from '../repositories';
-import {validateCredentials} from '../services';
-import {BcryptHasher} from '../services/hash.password';
-import {JWTService} from '../services/jwt-service';
-import {MyCustomerService} from '../services/customer-service';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
-import {customerRoutes} from './routes.helper'
+import { PasswordHasherBindings, TokenServiceBindings, CustomerServiceBindings } from '../keys';
+import { Customer } from '../models';
+import { Credentials, CustomerRepository } from '../repositories';
+import { validateCredentials } from '../services';
+import { BcryptHasher } from '../services/hash.password';
+import { JWTService } from '../services/jwt-service';
+import { MyCustomerService } from '../services/customer-service';
+import { OPERATION_SECURITY_SPEC } from '../utils/security-spec';
+import { customerRoutes } from './routes.helper'
 
 export class CustomerController {
   constructor(
@@ -81,7 +81,7 @@ export class CustomerController {
 
 
   @authenticate("jwt")
-  @get(customerRoutes.getme, {
+  @get(customerRoutes.getMe, {
     security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
@@ -100,4 +100,50 @@ export class CustomerController {
   ): Promise<UserProfile> {
     return Promise.resolve(currentCustomer);
   }
+
+  @get(customerRoutes.readTransaction)
+  @response(200, {
+    description: 'Admin read transaction of owner product',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Customer, {includeRelations: true}),
+      },
+    },
+  })
+  async readTransaction(
+    @param.path.string('id') id: string,
+    @param.filter(Customer, {exclude: 'where'}) filter?: FilterExcludingWhere<Customer>
+  ){
+    let transaction = {}
+    await this.customerRepository.findById(id, filter).then(agency => {
+      if(agency.transaction !== undefined){
+        transaction = agency.transaction
+      }
+    })
+    return transaction
+  }
+
+  @get(customerRoutes.readBilling)
+  @response(200, {
+    description: 'Admin read billing of owner product',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Customer, {includeRelations: true}),
+      },
+    },
+  })
+  async readBilling(
+    @param.path.string('id') id: string,
+    @param.filter(Customer, {exclude: 'where'}) filter?: FilterExcludingWhere<Customer>
+  ){
+    let billing = {}
+    await this.customerRepository.findById(id, filter).then(agency => {
+      if(agency.billing !== undefined){
+        billing = agency.billing
+        console.log(billing)
+      }
+    })
+    return billing
+  }
+
 }
