@@ -1,10 +1,10 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-
+require('dotenv').config();
 const config = {
   name: 'database',
   connector: 'mongodb',
-  url: 'mongodb://root:password@localhost:27017/dev?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false',
+  url: "mongodb://root:password@localhost:27017/dev?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false",
   host: 'localhost',
   port: 27017,
   user: 'root',

@@ -1,11 +1,14 @@
 import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {strict: false}})
-export class Agency extends Entity {
+export class Customer extends Entity {
   @property({
     type: 'string',
     id: true,
     generated: true,
+    index: {
+      unique: true
+    }
   })
   id?: string;
 
@@ -18,7 +21,7 @@ export class Agency extends Entity {
 
   @property({
     type: 'string',
-    required: false,
+    required: true,
     default: "",
   })
   address: string;
@@ -28,7 +31,8 @@ export class Agency extends Entity {
     required: true,
     index: {
       unique: true
-    }
+    },
+    format: 'email',
   })
   email: string;
 
@@ -52,11 +56,9 @@ export class Agency extends Entity {
   gender?: string;
 
   @property({
-    type: 'object',
-    default: {},
+    type: 'string',
   })
-  product?: object;
-  
+  cart?: string;
 
   @property({
     type: 'array',
@@ -72,13 +74,14 @@ export class Agency extends Entity {
   })
   billing?: object[];
 
-  constructor(data?: Partial<Agency>) {
+
+  constructor(data?: Partial<Customer>) {
     super(data);
   }
 }
 
-export interface AgencyRelations {
-  
+export interface CustomerRelations {
+
 }
 
-export type AgencyWithRelations = Agency & AgencyRelations;
+export type CustomerWithRelations = Customer & CustomerRelations;
