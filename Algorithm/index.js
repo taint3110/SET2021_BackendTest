@@ -96,4 +96,4 @@ function calculateSolution(contractsList, neededContainer){
 
 calculateSolution(firstCase.listings, firstCase.neededContainer)
 
-module.exports = {calculateSolution, optimizeSolution} 
+module.exports = {calculateSolution, optimizeSolution}

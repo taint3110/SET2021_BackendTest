@@ -1,0 +1,39 @@
+@startuml read owner billing agency sequence
+
+header READ OWNER BILLING AGENCY SEQUENCE
+actor Agency 
+control server
+database agency
+database billing
+
+opt READ: Agency read owner billing
+  Agency -> server: GET /agencies/readBilling
+  activate server
+  server -> server: check token
+  alt <font color=red>token invalid</font>
+    server --> Agency: 401, unauthorized error
+  else <font color=green>token valid</font>
+    server -> server: check isAgency
+    alt <font color=red>is not agency</font>
+      server --> Agency: 403, forbidden error
+    else <font color=green>is agency</font>
+      server -> agency: find agency
+      alt <font color=red>have error</font>
+        agency --> server: error
+        server --> Agency: 500, internal error
+      else <font color=green>found agency</font>
+        agency --> billing: find billing
+      else <font color=green>have agency linked with billing data</font>
+          billing --> agency: response billing
+          agency --> server: response billing
+      else <font color=green>success</font>
+          agency --> server: success
+          server --> Agency: 200, success
+        end
+      end
+    end
+  end
+    deactivate server
+
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml log in customer sequence
+
+header LOG IN CUSTOMER SEQUENCE
+actor Customer 
+control server
+database customer
+
+opt  Custommer log in
+  Customer -> server: POST /login with email and password
+  activate server
+      server -> customer: find customer with email
+      activate customer
+      alt <font color=red>have error</font>
+        customer --> server: error
+        server --> Customer: 500, internal error
+      else <font color=red>have no customer data</font>
+        customer --> server: fail
+        server --> Customer: 404, customer not found
+      else <font color=green>have customer data</font>
+          server -> customer: log in
+          alt <font color=red>have error</font>
+            customer --> server: error
+            server --> Customer: 500, internal error
+          else <font color=green>success</font>
+            customer --> server: success
+            server --> server: create a JWT with a secret
+            server --> Customer: 200, success, return the JWT
+            
+          end
+      end
+    end
+    deactivate customer
+    deactivate server
+
+
+@enduml

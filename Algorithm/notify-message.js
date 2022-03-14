@@ -3,7 +3,7 @@ const NOTIFY_MESSAGE = {
   CONTRACT_WITH: "[Contract with]",
   NOT_ENOUGH_CONTAINER: "not enough containers",
   CONTAINER: "container",
-  PRICE: "price"
+  PRICE: "price:",
 }
 
 module.exports = {NOTIFY_MESSAGE}
