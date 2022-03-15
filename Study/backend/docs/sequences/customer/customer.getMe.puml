@@ -1,0 +1,31 @@
+@startuml read customer information customer sequence
+
+header READ CUSTOMER INFORMATION CUSTOMER SEQUENCE
+actor Customer 
+control server
+
+opt READ: Custommer get customer information
+  Customer -> server: GET /customers/me
+  activate server
+  server -> server: check token
+  alt <font color=red>token invalid</font>
+    server --> Customer: 401, unauthorized error
+  else <font color=green>token valid</font>
+    server -> server: check isCustomer
+    alt <font color=red>is not customer</font>
+      server --> Customer: 403, forbidden error
+    else <font color=green>is customer</font>
+      server --> server: decrypt token to get customerProfile
+      alt <font color = red>have error</font>
+        server --> Customer: 500, internal error
+        else <font color=green>success</font>
+        server --> Customer : 200, return customer information
+
+      end
+      end
+    end
+  end
+    deactivate server
+
+
+@enduml

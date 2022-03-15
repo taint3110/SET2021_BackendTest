@@ -13,8 +13,8 @@ import { JWTService } from '../services/jwt-service';
 import { MyCustomerService } from '../services/customer-service';
 import { OPERATION_SECURITY_SPEC } from '../utils/security-spec';
 import { customerRoutes } from './routes.helper'
-import {authorize} from '@loopback/authorization';
-import {basicAuthorization} from '../services/basic.authorizor';
+import { authorize } from '@loopback/authorization';
+import { basicAuthorization } from '../services/basic.authorizor';
 
 export class CustomerController {
   constructor(
@@ -30,12 +30,12 @@ export class CustomerController {
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: JWTService,
 
-  ) {}
+  ) { }
 
   @post(customerRoutes.signup, {
     responses: {
       '200': {
-        description: 'Customer sign up',
+        description: 'Sign up',
         content: {
           schema: getJsonSchemaRef(Customer)
         }
@@ -44,11 +44,9 @@ export class CustomerController {
   })
   async signup(@requestBody() customerData: Customer) {
     await validateCredentials(_.pick(customerData, ['email', 'password']), this.customerRepository);
-    customerData.roles = ["customer"]
     customerData.password = await this.hasher.hashPassword(customerData.password)
     const savedCustomer = await this.customerRepository.create(customerData);
-    savedCustomer.password = "******"
-    return savedCustomer;
+    return _.omit(savedCustomer, 'password');
   }
 
   @post(customerRoutes.login, {
@@ -72,20 +70,16 @@ export class CustomerController {
   })
   async login(
     @requestBody() credentials: Credentials,
-  ): Promise<{token: string}> {
-    // make sure customer exist,password should be valid
+  ): Promise<{ token: string }> {
     const customer = await this.customerService.verifyCredentials(credentials);
-    // console.log(customer);
     const customerProfile = await this.customerService.convertToUserProfile(customer);
-    // console.log(customerProfile);
-
     const token = await this.jwtService.generateToken(customerProfile);
-    return Promise.resolve({token: token})
+    return Promise.resolve({ token: token })
   }
 
 
   @authenticate("jwt")
-  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
+  @authorize({ allowedRoles: ['customer'], voters: [basicAuthorization] })
   @get(customerRoutes.getMe, {
     security: OPERATION_SECURITY_SPEC,
     responses: {
@@ -111,17 +105,17 @@ export class CustomerController {
     description: 'Admin read transaction of owner product',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Customer, {includeRelations: true}),
+        schema: getModelSchemaRef(Customer, { includeRelations: true }),
       },
     },
   })
   async readTransaction(
     @param.path.string('id') id: string,
-    @param.filter(Customer, {exclude: 'where'}) filter?: FilterExcludingWhere<Customer>
-  ){
+    @param.filter(Customer, { exclude: 'where' }) filter?: FilterExcludingWhere<Customer>
+  ) {
     let transaction = {}
     await this.customerRepository.findById(id, filter).then(agency => {
-      if(agency.transaction !== undefined){
+      if (agency.transaction !== undefined) {
         transaction = agency.transaction
       }
     })
@@ -133,17 +127,17 @@ export class CustomerController {
     description: 'Admin read billing of owner product',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Customer, {includeRelations: true}),
+        schema: getModelSchemaRef(Customer, { includeRelations: true }),
       },
     },
   })
   async readBilling(
     @param.path.string('id') id: string,
-    @param.filter(Customer, {exclude: 'where'}) filter?: FilterExcludingWhere<Customer>
-  ){
+    @param.filter(Customer, { exclude: 'where' }) filter?: FilterExcludingWhere<Customer>
+  ) {
     let billing = {}
     await this.customerRepository.findById(id, filter).then(agency => {
-      if(agency.billing !== undefined){
+      if (agency.billing !== undefined) {
         billing = agency.billing
         console.log(billing)
       }

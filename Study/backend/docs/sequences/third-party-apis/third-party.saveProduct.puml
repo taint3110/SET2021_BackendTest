@@ -1,0 +1,47 @@
+@startuml save product agency sequence
+
+header SAVE PRODUCT AGENCY SEQUENCE
+actor Agency 
+control ThirdPartyApi
+control server
+database agency
+database product
+
+opt UPDATE: Agency save product data via 3rd api
+  Agency --> ThirdPartyApi: request to save product
+  activate ThirdPartyApi
+
+
+  ThirdPartyApi -> server: PATCH /agencies/createProduct
+  activate server
+  server -> server: check token
+  alt <font color=red>token invalid</font>
+    server --> ThirdPartyApi: request denied
+    ThirdPartyApi --> Agency: 401, unauthorized error
+  else <font color=green>token valid</font>
+    server -> server: check isAgency
+    alt <font color=red>is not agency</font>
+      server --> ThirdPartyApi: request denied
+      ThirdPartyApi --> Agency: 403, forbidden error
+    else <font color=green>is agency</font>
+      server -> agency: find agency
+      alt <font color=red>have error</font>
+        agency --> server: error
+        server --> ThirdPartyApi: return error
+        ThirdPartyApi --> Agency: 500, internal error
+      else <font color=green>found agency</font>
+        agency --> product: create product
+        else <font color=green>success</font>
+          activate product
+          product --> agency: success
+          agency --> server: success
+          server --> ThirdPartyApi: success
+          ThirdPartyApi --> Agency: 200, success, response data
+        end
+      end
+    end
+  end
+    deactivate server
+
+
+@enduml

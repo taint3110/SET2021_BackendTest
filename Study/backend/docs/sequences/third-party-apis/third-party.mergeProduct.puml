@@ -1,0 +1,46 @@
+@startuml save product customer sequence
+
+header UPDATE OWNER PRODUCT AGENCY SEQUENCE
+actor Agency 
+control server
+database customer
+database product
+
+opt UPDATE: Agency update owner product
+  Agency -> server: PATCH /agencies/updateProduct
+  activate server
+  server -> server: check token
+  alt <font color=red>token invalid</font>
+    server --> Agency: 401, unauthorized error
+  else <font color=green>token valid</font>
+    server -> server: check isAgency
+    alt <font color=red>is not customer</font>
+      server --> Agency: 403, forbidden error
+    else <font color=green>is customer</font>
+      server -> customer: find customer
+      alt <font color=red>have error</font>
+        customer --> server: error
+        server --> Agency: 500, internal error
+      else <font color=green>found customer</font>
+        customer --> product: find product
+        alt <font color=red>product not found</font>
+          product --> customer: response error
+          customer --> server: fail
+          server --> Agency: 404, not found
+        else <font color=green>found product</font>
+          activate product
+          product --> product: update product
+          product --> customer: success
+        else <font color=green>success</font>
+
+          customer --> server: success
+          server --> Agency: 200, success, response data
+          end
+        end
+      end
+    end
+  end
+    deactivate server
+
+
+@enduml

@@ -8,7 +8,7 @@ import {
   AuthorizationDecision,
   AuthorizationMetadata,
 } from '@loopback/authorization';
-import {securityId, UserProfile} from '@loopback/security';
+import { securityId, UserProfile } from '@loopback/security';
 import _ from 'lodash';
 
 // Instance level authorizer
@@ -24,7 +24,7 @@ export async function basicAuthorization(
       'name',
       'roles',
     ]);
-    currentCustomer = {[securityId]: customer.id, name: customer.name, roles: customer.roles};
+    currentCustomer = { [securityId]: customer.id, name: customer.name, roles: customer.roles };
   } else {
     return AuthorizationDecision.DENY;
   }
