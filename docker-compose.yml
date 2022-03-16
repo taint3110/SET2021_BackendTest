@@ -7,7 +7,7 @@ services:
   my-database-service: 
     container_name: 'my-database' 
     build:  
-      context: ./ 
+      context: ./Study
       dockerfile: Dockerfile 
     image: 'mongo' 
     restart: always 
